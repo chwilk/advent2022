@@ -18,6 +18,14 @@ struct TestDay {
 fn day1a() -> TestResult {
     TestDay::day("1").half("a").test_file().assert()
 }
+#[test]
+fn day1b() -> TestResult {
+    TestDay::day("1").half("b").test_file().assert()
+}
+#[test]
+fn day1() -> TestResult {
+    TestDay::day("1").half("").test_file().assert()
+}
 // Day 2
 /*
 #[test]
