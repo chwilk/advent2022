@@ -56,6 +56,7 @@ impl TestDay {
     }
 
     // add argument
+    #[allow(dead_code)]
     pub fn arg<'a>(&'a mut self, arg: &str) -> &'a mut TestDay {
         self.args.push(arg.to_string());
         self
@@ -74,6 +75,7 @@ impl TestDay {
     }
 
     // set binary (default advent{day}{half}) (optional)
+    #[allow(dead_code)]
     pub fn set_bin<'a>(&'a mut self, bin: &str) -> &'a mut TestDay {
         self.bin = Some(bin.to_string());
         self

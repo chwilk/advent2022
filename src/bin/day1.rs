@@ -7,7 +7,7 @@ fn main() {
 
     let filename = find_filename(env::args());
 
-    let mut elves: Vec<u32> = fs::read_to_string(filename)
+    let elves: Vec<u32> = fs::read_to_string(filename)
         .unwrap_or_else(|error| {
             panic!("Could not read file: {:?}", error);
         })
