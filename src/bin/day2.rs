@@ -2,12 +2,18 @@ use std::env;
 use std::fs;
 use advent2021::find_filename;
 
+struct Day {
+    a: u32,
+    b: u32,
+}
+
 fn main() {
 
     let filename = find_filename(env::args());
 
-    let scores = [4,8,3,1,5,9,7,2,6];
-    let total: Vec<u32> = fs::read_to_string(filename)
+    let parta = [4,8,3,1,5,9,7,2,6];
+    let partb = [3,4,8,1,5,9,2,6,7];
+    let total: Vec<Day> = fs::read_to_string(filename)
         .unwrap_or_else(|error| {
             panic!("Could not read file: {:?}", error);
         })
@@ -23,7 +29,8 @@ fn main() {
                         "C" => 6,
                         &_  => 0,
                     }).collect::<Vec<usize>>().iter().sum()
-        }).map(|index: usize| scores[index]).collect::<Vec<u32>>();
+        }).map(|index: usize| Day{a: parta[index], b: partb[index]}).collect::<Vec<Day>>();
 
-    println! ("{}", total.iter().sum::<u32>());
+    println! ("{}", total.iter().map(|day| day.a).sum::<u32>());
+    println! ("{}", total.iter().map(|day| day.b).sum::<u32>());
 }
