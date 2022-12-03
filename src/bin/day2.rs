@@ -1,6 +1,6 @@
 use std::env;
 use std::fs;
-use advent2021::find_filename;
+use advent2022::find_filename;
 
 struct Day {
     a: u32,
