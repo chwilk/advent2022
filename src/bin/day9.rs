@@ -13,11 +13,12 @@ fn main() {
             panic!("Could not read file: {:?}", error);
         });
 
-    let mut loc = HashSet::new();
-    let mut head = Point{ x:0, y:0};
-    let mut tail = Point{ x:0, y:0};
+    let mut parta = HashSet::new();
+    let mut partb = HashSet::new();
+    let mut rope = [Point{ x:0, y:0};10];
 
-    loc.insert(tail);
+    parta.insert(rope[1]);
+    partb.insert(rope[9]);
 
     for cmd in moves.lines() {
         let (dir, len) = cmd.split_once(' ').unwrap();
@@ -29,14 +30,18 @@ fn main() {
             _ => Point {x:0,y:0},
         };
         for _i in 0..len.parse::<usize>().unwrap_or(0) {
-            head = head + mov;
-            tail.follow(head);
-            loc.insert(tail);
+            rope[0] = rope[0] + mov;
+            for i in 1..10 {
+                rope[i].follow(rope[i-1]);
+            }
+            parta.insert(rope[1]);
+            partb.insert(rope[9]);
             //println! ("H{:?}, T{:?}", head, tail );
         }
 
     }
-    println!("{}", loc.len());
+    println!("{}", parta.len());
+    println!("{}", partb.len());
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -60,17 +65,32 @@ impl Point {
     fn follow(&mut self, other: Point) -> &mut Point {
         if other.y - self.y > 1 {
             self.y = self.y + 1;
-            self.x = other.x;
+            if self.x > other.x {
+                self.x = self.x - 1;
+            } else if self.x < other.x {
+                self.x = self.x + 1;
+            }
         } else if self.y - other.y > 1 {
             self.y = self.y - 1;
-            self.x = other.x;
-        }
-        if other.x - self.x > 1 {
+            if self.x > other.x {
+                self.x = self.x - 1;
+            } else if self.x < other.x {
+                self.x = self.x + 1;
+            }
+        } else if other.x - self.x > 1 {
             self.x = self.x + 1;
-            self.y = other.y;
+            if self.y > other.y {
+                self.y = self.y - 1;
+            } else if self.y < other.y {
+                self.y = self.y + 1;
+            }
         } else if self.x - other.x > 1 {
             self.x = self.x - 1;
-            self.y = other.y;
+            if self.y > other.y {
+                self.y = self.y - 1;
+            } else if self.y < other.y {
+                self.y = self.y + 1;
+            }
         }
         self
     }
