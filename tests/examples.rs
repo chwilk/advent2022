@@ -63,6 +63,18 @@ fn day7() -> TestResult {
     TestDay::day("7").half("").test_file().assert()
 }
 
+// Day 8
+#[test]
+fn day8() -> TestResult {
+    TestDay::day("8").half("").test_file().assert()
+}
+
+// Day 9
+#[test]
+fn day9() -> TestResult {
+    TestDay::day("9").half("").test_file().assert()
+}
+
 // Day 21 (example with arguments)
 /*
 #[test]
