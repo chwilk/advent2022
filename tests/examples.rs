@@ -13,6 +13,61 @@ struct TestDay {
     bin: Option<String>,
 }
 
+impl TestDay {
+    pub fn day(day: &str) -> TestDay {
+        TestDay {
+            day: day.to_string(),
+            args: Vec::new(),
+            half: String::from(""),
+            bin: None,
+        }
+    }
+
+    // add argument
+    #[allow(dead_code)]
+    pub fn arg<'a>(&'a mut self, arg: &str) -> &'a mut TestDay {
+        self.args.push(arg.to_string());
+        self
+    }
+
+    // add test filename (optional)
+    pub fn test_file<'a>(&'a mut self) -> &'a mut TestDay {
+        self.args.push(format!("tests/inputs/test{}.dat", self.day));
+        self
+    }
+
+    // add a,b half of day designator (optional)
+    pub fn half<'a>(&'a mut self, half: &str) -> &'a mut TestDay {
+        self.half.push_str(half);
+        self
+    }
+
+    // set binary (default advent{day}{half}) (optional)
+    #[allow(dead_code)]
+    pub fn set_bin<'a>(&'a mut self, bin: &str) -> &'a mut TestDay {
+        self.bin = Some(bin.to_string());
+        self
+    }
+
+    // Do the test run
+    pub fn assert<'a>(&'a mut self) -> TestResult {
+        let expected = fs::read_to_string(format!("tests/outputs/test{}{}.out", self.day, self.half))?;
+
+        let bin = match &self.bin {
+            None    => format!("day{}{}", self.day, self.half),
+            Some(b) => b.to_string(),
+        };
+
+        Command::cargo_bin(bin)?
+            .args(&self.args)
+            .assert()
+            .stdout(predicate::str::contains(expected.trim_end()));
+
+        Ok(())
+    }
+}
+
+
 // Day 1
 #[test]
 fn day1a() -> TestResult {
@@ -81,68 +136,8 @@ fn day10() -> TestResult {
     TestDay::day("10").half("").test_file().assert()
 }
 
-// Day 21 (example with arguments)
-/*
+// Day 11
 #[test]
-fn day21() -> TestResult {
-    TestDay::day("21")
-        .half("")
-        .arg("4")
-        .arg("8")
-        .assert()
-}
-*/
-
-impl TestDay {
-    pub fn day(day: &str) -> TestDay {
-        TestDay {
-            day: day.to_string(),
-            args: Vec::new(),
-            half: String::from(""),
-            bin: None,
-        }
-    }
-
-    // add argument
-    #[allow(dead_code)]
-    pub fn arg<'a>(&'a mut self, arg: &str) -> &'a mut TestDay {
-        self.args.push(arg.to_string());
-        self
-    }
-
-    // add test filename (optional)
-    pub fn test_file<'a>(&'a mut self) -> &'a mut TestDay {
-        self.args.push(format!("tests/inputs/test{}.dat", self.day));
-        self
-    }
-
-    // add a,b half of day designator (optional)
-    pub fn half<'a>(&'a mut self, half: &str) -> &'a mut TestDay {
-        self.half.push_str(half);
-        self
-    }
-
-    // set binary (default advent{day}{half}) (optional)
-    #[allow(dead_code)]
-    pub fn set_bin<'a>(&'a mut self, bin: &str) -> &'a mut TestDay {
-        self.bin = Some(bin.to_string());
-        self
-    }
-
-    // Do the test run
-    pub fn assert<'a>(&'a mut self) -> TestResult {
-        let expected = fs::read_to_string(format!("tests/outputs/test{}{}.out", self.day, self.half))?;
-
-        let bin = match &self.bin {
-            None    => format!("day{}{}", self.day, self.half),
-            Some(b) => b.to_string(),
-        };
-
-        Command::cargo_bin(bin)?
-            .args(&self.args)
-            .assert()
-            .stdout(predicate::str::contains(expected.trim_end()));
-
-        Ok(())
-    }
+fn day11() -> TestResult {
+    TestDay::day("11").half("").test_file().assert()
 }
