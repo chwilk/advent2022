@@ -12,6 +12,7 @@ fn main() {
     let mut start = 0;
     let mut end = 0;
     let mut row = 0;
+    let mut starts: Vec<usize> = Vec::new();
 
     let height_map: Vec<char> = fs::read_to_string(filename)
         .unwrap_or_else(|error| {
@@ -25,19 +26,29 @@ fn main() {
             }
             l.chars()
             .enumerate()
-            .map(|(i, c)| match c {
-                'S' => {start = i+(row-1)*width; 'a'}
-                'E' => {end = i+(row-1)*width; 'z'}
-                _ => c
+            .map(|(i, c)| {
+                let m = match c {
+                    'S' => {start = i+(row-1)*width; 'a'}
+                    'E' => {end = i+(row-1)*width; 'z'}
+                    _ => c
+                };
+                if (row == 1 || i == 0 || i == width-1) && m == 'a' {
+                    starts.push(i+(row-1)*width);
+                }
+                m
             })
             .collect::<Vec<char>>()
         })
         .concat();
 
-        println!("{}", parta(height_map.clone(), width, start, end));
+        // part a
+        println!("{}", djikstra(height_map.clone(), width, end, Vec::from([start])));
+        // part b
+        println!("{}", djikstra(height_map.clone(), width, end, starts));
+
 }
 
-fn parta(map: Vec<char>, width: usize, start: usize, end: usize) -> usize {
+fn djikstra(map: Vec<char>, width: usize, start: usize, end: Vec<usize>) -> usize {
     let infinity = width * width * width;
     let mut dist: Vec<usize> = Vec::new();
     let mut unvisited = Vec::new();
@@ -60,7 +71,7 @@ fn parta(map: Vec<char>, width: usize, start: usize, end: usize) -> usize {
                 min = dist[u_u];
             }  
         }
-        if u == end {
+        if end.contains(&u) {
             break;
         }
         unvisited.remove(idx);
@@ -80,7 +91,7 @@ fn parta(map: Vec<char>, width: usize, start: usize, end: usize) -> usize {
         }
         for n in neigh {
             if unvisited.contains(&n) {
-                let jump = map[n] as i32 - map[u] as i32;
+                let jump = map[u] as i32 - map[n] as i32;
                 if jump < 2 {
                     if dist[u] + 1 < dist[n] {
                         dist[n] = dist[u] + 1;
@@ -89,8 +100,13 @@ fn parta(map: Vec<char>, width: usize, start: usize, end: usize) -> usize {
             }
         }
     }
-    
-    dist[end]
+    let mut min = infinity;
+    for e in end {
+        if min > dist[e] {
+            min = dist[e];
+        }
+    }
+    min
 }
 
 #[allow(dead_code)]
