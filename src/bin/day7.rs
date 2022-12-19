@@ -45,7 +45,6 @@ fn main() {
     let paths: Vec<&String> = dirs.keys().sorted().rev().collect();
     for &d in paths.iter() {
         if d == "/" { break; }
-        let depth: usize = d.matches("/").collect::<Vec<&str>>().len();
         let mut dir = d.clone();
         let mut dirsize = *sumdirs.get(&dir).unwrap_or(&0);
         dir = dir.rsplit_once('/').unwrap().0.to_string();
