@@ -6,7 +6,7 @@ pub fn find_filename(mut args: env::Args) -> String {
     let filename: String;
     if args.len() < 2 { // Try to guess a test#.dat from binary name
         let day = parse_int(args.nth(0).unwrap()).unwrap();
-        filename = format!("input{}.dat", day);
+        filename = format!("tests/inputs/test{}.dat", day);
     } else {
         filename = args.nth(1).unwrap().clone();
     }

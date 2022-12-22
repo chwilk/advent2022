@@ -152,3 +152,21 @@ fn day12() -> TestResult {
 fn day17() -> TestResult {
     TestDay::day("17").half("").test_file().assert()
 }
+
+// Day 19
+//#[test]
+//fn day19() -> TestResult {
+//    TestDay::day("19").half("").test_file().assert()
+//}
+
+// Day 21
+#[test]
+fn day21() -> TestResult {
+    TestDay::day("21").half("").test_file().assert()
+}
+
+// Day 20
+#[test]
+fn day20() -> TestResult {
+    TestDay::day("20").half("").test_file().assert()
+}
